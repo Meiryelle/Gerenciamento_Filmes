@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Sistema de Cadastro de Filmes</title>
+</head>
+<body>
+    <h1>Sistema de Cadastro de Filmes</h1>
+    <a href="/add" class="button">Adicionar Filme</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Diretor</th>
+                <th>Gênero</th>
+                <th>Ano</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for filme in filmes %}
+            <tr>
+                <td>{{ filme[1] }}</td>
+                <td>{{ filme[2] }}</td>
+                <td>{{ filme[3] }}</td>
+                <td>{{ filme[4] }}</td>
+                <td>
+                    <a href="/edit/{{ filme[0] }}">Editar</a>
+                    <a href="/delete/{{ filme[0] }}" onclick="return confirm('Deseja excluir este filme?')">Excluir</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
