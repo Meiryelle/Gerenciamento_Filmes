@@ -2,25 +2,26 @@ from flask import Flask, render_template, request, redirect, flash, url_for, ses
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
-app.secret_key = '12345'
+app.secret_key = ''
 
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '12345' 
+app.config['MYSQL_PASSWORD'] = 'nova_senha'
 app.config['MYSQL_DB'] = 'cadastro_de_filmes_db'
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+
 
 mysql = MySQL(app)
+
 @app.route('/')
 def index():
-    try:
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM filmes')
-        filmes = cur.fetchall()
-        cur.close()
-        return render_template('index.html', filmes=filmes)
-    except Exception as e:
-        return f"Erro ao acessar o banco de dados: {str(e)}"
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM filmes")
+    filmes = cur.fetchall() 
+    print(filmes)
+    cur.close()
+    return render_template('index.html', filmes=filmes)
 
 @app.route('/add', methods=['GET', 'POST'])
 def add():
@@ -45,7 +46,7 @@ def add():
 @app.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar(id):
     cur = mysql.connection.cursor()
-
+    
     if request.method == 'POST':
         titulo = request.form['titulo']
         diretor = request.form['diretor']
@@ -64,7 +65,7 @@ def editar(id):
     cur.execute('SELECT * FROM filmes WHERE id = %s', (id,))
     filme = cur.fetchone()
     cur.close()
-    return render_template('edit.html', filme=filme)
+    return render_template('editar.html', filme=filme)
 
 @app.route('/deletar/<int:id>')
 def deletar(id):
